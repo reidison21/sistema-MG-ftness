@@ -28,25 +28,39 @@
 
         <p class="text-secondary small mb-3">Vence em {{ info.data_vencimento }} &middot; {{ aluno.telefone }}</p>
 
-        <div class="d-flex gap-2 mt-auto flex-wrap">
+        <div class="mt-auto">
           <form method="post" action="{{ url_for('pagamentos.renovar', aluno_id=aluno.id) }}" onsubmit="return confirm('Marcar {{ aluno.nome }} como pago hoje e renovar por mais {{ aluno.plano.duracao_dias }} dias?');">
-            <button type="submit" class="btn btn-sm btn-primary">Renovar hoje</button>
+            <button type="submit" class="btn btn-primary w-100">Renovar hoje</button>
           </form>
-          <button type="button" class="btn btn-sm btn-outline-light" onclick="document.getElementById('data-form-{{ aluno.id }}').classList.toggle('d-none')">Escolher data</button>
-          <a href="{{ url_for('alunos.mensagens', id=aluno.id) }}" class="btn btn-sm btn-outline-success">Cobrar no WhatsApp</a>
-          <a href="{{ url_for('alunos.detalhe', id=aluno.id) }}" class="btn btn-sm btn-outline-secondary">Ver aluno</a>
-        </div>
 
-        <form
-          id="data-form-{{ aluno.id }}"
-          method="post"
-          action="{{ url_for('pagamentos.renovar', aluno_id=aluno.id) }}"
-          class="d-none mt-2 d-flex gap-2"
-          onsubmit="return confirm('Renovar {{ aluno.nome }} a partir da data escolhida?');"
-        >
-          <input type="date" name="data" class="form-control form-control-sm" required>
-          <button type="submit" class="btn btn-sm btn-outline-light">Confirmar data</button>
-        </form>
+          <button
+            type="button"
+            class="btn btn-link btn-sm p-0 mt-2 text-decoration-none"
+            onclick="document.getElementById('data-form-{{ aluno.id }}').classList.toggle('d-none')"
+          >
+            Pagou em outro dia? Escolher data
+          </button>
+
+          <form
+            id="data-form-{{ aluno.id }}"
+            method="post"
+            action="{{ url_for('pagamentos.renovar', aluno_id=aluno.id) }}"
+            class="d-none mt-2"
+            onsubmit="return confirm('Renovar {{ aluno.nome }} a partir da data escolhida?');"
+          >
+            <div class="input-group input-group-sm">
+              <input type="date" name="data" class="form-control" required>
+              <button type="submit" class="btn btn-outline-light">Confirmar</button>
+            </div>
+          </form>
+
+          <hr class="my-3">
+
+          <div class="d-flex gap-2">
+            <a href="{{ url_for('alunos.mensagens', id=aluno.id) }}" class="btn btn-sm btn-outline-success flex-fill">WhatsApp</a>
+            <a href="{{ url_for('alunos.detalhe', id=aluno.id) }}" class="btn btn-sm btn-outline-secondary flex-fill">Ver aluno</a>
+          </div>
+        </div>
       </div>
     </div>
   </div>

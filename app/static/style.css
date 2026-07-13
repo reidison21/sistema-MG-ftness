@@ -298,6 +298,13 @@ hr, .border { border-color: var(--border) !important; }
 a { color: var(--accent); }
 a:hover { color: var(--accent-hover); }
 
+.btn-link {
+  color: var(--text-muted);
+}
+.btn-link:hover {
+  color: var(--accent);
+}
+
 code {
   color: var(--accent);
   background: var(--surface-2);
