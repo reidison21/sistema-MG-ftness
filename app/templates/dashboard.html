@@ -42,4 +42,34 @@
   <a href="{{ url_for('pagamentos.listar') }}" class="btn btn-outline-light">Ver pagamentos do mês</a>
   <a href="{{ url_for('pagamentos.historico') }}" class="btn btn-outline-light">Histórico de recebimentos</a>
 </div>
+
+{% if alertas %}
+<h5 class="mt-5 mb-3">Planos vencendo ou vencidos</h5>
+<div class="table-responsive">
+  <table class="table table-hover align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Aluno</th>
+        <th>Plano</th>
+        <th>Situação</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for aluno, info in alertas %}
+      <tr>
+        <td><a href="{{ url_for('alunos.detalhe', id=aluno.id) }}">{{ aluno.nome }}</a></td>
+        <td>{{ aluno.plano.nome }}</td>
+        <td>
+          {% if info.status == "vencido" %}
+            <span class="badge bg-danger">Vencido há {{ -info.dias }}d</span>
+          {% else %}
+            <span class="badge bg-warning">Vence em {{ info.dias }}d</span>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
 {% endblock %}

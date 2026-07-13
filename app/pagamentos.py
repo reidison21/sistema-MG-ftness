@@ -1,6 +1,8 @@
+import csv
+import io
 from datetime import date
 
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask import Blueprint, Response, redirect, render_template, request, url_for
 from sqlalchemy import func
 
 from .models import Aluno, Pagamento, db
@@ -58,3 +60,29 @@ def historico():
         .all()
     )
     return render_template("pagamentos/historico.html", resultados=resultados)
+
+
+@pagamentos_bp.route("/historico.csv")
+def historico_csv():
+    resultados = (
+        db.session.query(
+            Pagamento.mes_referencia,
+            func.coalesce(func.sum(Pagamento.valor), 0).label("total"),
+            func.count(Pagamento.id).label("qtd_pagos"),
+        )
+        .filter(Pagamento.status == "pago")
+        .group_by(Pagamento.mes_referencia)
+        .order_by(Pagamento.mes_referencia.desc())
+        .all()
+    )
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(["Mês", "Alunos pagos", "Total recebido"])
+    for mes_referencia, total, qtd_pagos in resultados:
+        writer.writerow([mes_referencia, qtd_pagos, f"{total:.2f}"])
+    csv_data = "﻿" + output.getvalue()
+    return Response(
+        csv_data,
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=historico_recebimentos.csv"},
+    )

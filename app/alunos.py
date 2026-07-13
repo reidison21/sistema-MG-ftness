@@ -1,10 +1,13 @@
+import csv
+import io
 import re
 from datetime import datetime
 from urllib.parse import quote
 
-from flask import Blueprint, flash, redirect, render_template, request, url_for
+from flask import Blueprint, Response, flash, redirect, render_template, request, url_for
 
-from .models import Aluno, MensagemTemplate, Plano, db
+from .models import Aluno, MensagemTemplate, Pagamento, Plano, db
+from .utils import status_vencimento
 
 alunos_bp = Blueprint("alunos", __name__, url_prefix="/alunos")
 
@@ -18,8 +21,13 @@ def normalizar_telefone(numero):
 
 @alunos_bp.route("/")
 def listar():
-    alunos = Aluno.query.order_by(Aluno.nome).all()
-    return render_template("alunos/listar.html", alunos=alunos)
+    q = request.args.get("q", "").strip()
+    consulta = Aluno.query
+    if q:
+        consulta = consulta.filter(Aluno.nome.ilike(f"%{q}%"))
+    alunos = consulta.order_by(Aluno.nome).all()
+    vencimentos = {aluno.id: status_vencimento(aluno) for aluno in alunos}
+    return render_template("alunos/listar.html", alunos=alunos, q=q, vencimentos=vencimentos)
 
 
 @alunos_bp.route("/novo", methods=["GET", "POST"])
@@ -70,6 +78,20 @@ def excluir(id):
     return redirect(url_for("alunos.listar"))
 
 
+@alunos_bp.route("/<int:id>")
+def detalhe(id):
+    aluno = Aluno.query.get_or_404(id)
+    pagamentos = (
+        Pagamento.query.filter_by(aluno_id=aluno.id)
+        .order_by(Pagamento.mes_referencia.desc())
+        .all()
+    )
+    vencimento = status_vencimento(aluno)
+    return render_template(
+        "alunos/detalhe.html", aluno=aluno, pagamentos=pagamentos, vencimento=vencimento
+    )
+
+
 @alunos_bp.route("/<int:id>/mensagens")
 def mensagens(id):
     aluno = Aluno.query.get_or_404(id)
@@ -80,3 +102,32 @@ def mensagens(id):
         link = f"https://wa.me/{aluno.telefone}?text={quote(texto)}"
         links.append({"titulo": t.titulo, "texto": texto, "link": link})
     return render_template("alunos/mensagens.html", aluno=aluno, links=links)
+
+
+@alunos_bp.route("/exportar.csv")
+def exportar_csv():
+    alunos = Aluno.query.order_by(Aluno.nome).all()
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(
+        ["Nome", "Telefone", "Email", "Plano", "Data matrícula", "Status", "Vencimento"]
+    )
+    for aluno in alunos:
+        info = status_vencimento(aluno)
+        writer.writerow(
+            [
+                aluno.nome,
+                aluno.telefone,
+                aluno.email or "",
+                aluno.plano.nome if aluno.plano else "",
+                aluno.data_matricula.isoformat(),
+                "Ativo" if aluno.ativo else "Inativo",
+                info["data_vencimento"].isoformat() if info["data_vencimento"] else "",
+            ]
+        )
+    csv_data = "﻿" + output.getvalue()
+    return Response(
+        csv_data,
+        mimetype="text/csv",
+        headers={"Content-Disposition": "attachment; filename=alunos.csv"},
+    )
