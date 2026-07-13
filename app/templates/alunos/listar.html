@@ -20,7 +20,6 @@
     <thead>
       <tr>
         <th>Nome</th>
-        <th>Telefone</th>
         <th>Plano</th>
         <th>Status</th>
         <th>Vencimento</th>
@@ -32,7 +31,6 @@
       {% set v = vencimentos[aluno.id] %}
       <tr>
         <td><a href="{{ url_for('alunos.detalhe', id=aluno.id) }}">{{ aluno.nome }}</a></td>
-        <td>{{ aluno.telefone }}</td>
         <td>{{ aluno.plano.nome if aluno.plano else "-" }}</td>
         <td>
           {% if aluno.ativo %}
@@ -63,7 +61,7 @@
         </td>
       </tr>
       {% else %}
-      <tr><td colspan="6" class="text-center text-secondary">Nenhum aluno encontrado.</td></tr>
+      <tr><td colspan="5" class="text-center text-secondary">Nenhum aluno encontrado.</td></tr>
       {% endfor %}
     </tbody>
   </table>
