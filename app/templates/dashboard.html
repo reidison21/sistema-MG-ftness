@@ -3,7 +3,7 @@
 {% block content %}
 <h2 class="mb-4">Dashboard <span class="text-secondary fs-6">— {{ mes_atual }}</span></h2>
 <div class="row g-3">
-  <div class="col-md-4">
+  <div class="col-6 col-lg-3">
     <div class="card stat-card shadow-sm">
       <div class="card-body">
         <div class="stat-label">Alunos ativos</div>
@@ -11,7 +11,7 @@
       </div>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-6 col-lg-3">
     <div class="card stat-card shadow-sm">
       <div class="card-body">
         <div class="stat-label">Pagos no mês</div>
@@ -19,11 +19,19 @@
       </div>
     </div>
   </div>
-  <div class="col-md-4">
+  <div class="col-6 col-lg-3">
     <div class="card stat-card shadow-sm">
       <div class="card-body">
         <div class="stat-label">Pendentes no mês</div>
         <p class="stat-value mb-0">{{ pendentes }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="card stat-card shadow-sm">
+      <div class="card-body">
+        <div class="stat-label">Recebido no mês</div>
+        <p class="stat-value mb-0">R$ {{ "%.2f"|format(total_recebido) }}</p>
       </div>
     </div>
   </div>
@@ -32,5 +40,6 @@
 <div class="mt-4 d-flex gap-2 flex-wrap">
   <a href="{{ url_for('alunos.novo') }}" class="btn btn-primary">Novo aluno</a>
   <a href="{{ url_for('pagamentos.listar') }}" class="btn btn-outline-light">Ver pagamentos do mês</a>
+  <a href="{{ url_for('pagamentos.historico') }}" class="btn btn-outline-light">Histórico de recebimentos</a>
 </div>
 {% endblock %}
