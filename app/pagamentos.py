@@ -1,6 +1,6 @@
 import csv
 import io
-from datetime import date
+from datetime import date, datetime
 
 from flask import Blueprint, Response, flash, redirect, render_template, request, url_for
 from sqlalchemy import func
@@ -49,16 +49,22 @@ def alternar(id):
 @pagamentos_bp.route("/renovar/<int:aluno_id>", methods=["POST"])
 def renovar(aluno_id):
     aluno = Aluno.query.get_or_404(aluno_id)
-    mes = date.today().strftime("%Y-%m")
+    data_str = request.form.get("data")
+    if data_str:
+        data_pagamento = datetime.strptime(data_str, "%Y-%m-%d").date()
+    else:
+        data_pagamento = date.today()
+
+    mes = data_pagamento.strftime("%Y-%m")
     pagamento = Pagamento.query.filter_by(aluno_id=aluno.id, mes_referencia=mes).first()
     if not pagamento:
         pagamento = Pagamento(aluno_id=aluno.id, mes_referencia=mes)
         db.session.add(pagamento)
     pagamento.status = "pago"
-    pagamento.data_pagamento = date.today()
+    pagamento.data_pagamento = data_pagamento
     pagamento.valor = aluno.plano.valor if aluno.plano else 0
     db.session.commit()
-    flash(f"Pagamento de {aluno.nome} renovado.")
+    flash(f"Pagamento de {aluno.nome} renovado a partir de {data_pagamento.strftime('%d/%m/%Y')}.")
     return redirect(request.referrer or url_for("alunos.vencidos"))
 
 
