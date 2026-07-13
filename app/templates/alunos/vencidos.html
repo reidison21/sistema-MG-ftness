@@ -28,7 +28,10 @@
 
         <p class="text-secondary small mb-3">Vence em {{ info.data_vencimento }} &middot; {{ aluno.telefone }}</p>
 
-        <div class="d-flex gap-2 mt-auto">
+        <div class="d-flex gap-2 mt-auto flex-wrap">
+          <form method="post" action="{{ url_for('pagamentos.renovar', aluno_id=aluno.id) }}" onsubmit="return confirm('Marcar {{ aluno.nome }} como pago e renovar por mais {{ aluno.plano.duracao_dias }} dias?');">
+            <button type="submit" class="btn btn-sm btn-primary">Pago / Renovar</button>
+          </form>
           <a href="{{ url_for('alunos.mensagens', id=aluno.id) }}" class="btn btn-sm btn-outline-success">Cobrar no WhatsApp</a>
           <a href="{{ url_for('alunos.detalhe', id=aluno.id) }}" class="btn btn-sm btn-outline-secondary">Ver aluno</a>
         </div>

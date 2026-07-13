@@ -2,7 +2,7 @@ import csv
 import io
 from datetime import date
 
-from flask import Blueprint, Response, redirect, render_template, request, url_for
+from flask import Blueprint, Response, flash, redirect, render_template, request, url_for
 from sqlalchemy import func
 
 from .models import Aluno, Pagamento, db
@@ -44,6 +44,22 @@ def alternar(id):
         pagamento.valor = pagamento.aluno.plano.valor if pagamento.aluno.plano else 0
     db.session.commit()
     return redirect(url_for("pagamentos.listar", mes=pagamento.mes_referencia))
+
+
+@pagamentos_bp.route("/renovar/<int:aluno_id>", methods=["POST"])
+def renovar(aluno_id):
+    aluno = Aluno.query.get_or_404(aluno_id)
+    mes = date.today().strftime("%Y-%m")
+    pagamento = Pagamento.query.filter_by(aluno_id=aluno.id, mes_referencia=mes).first()
+    if not pagamento:
+        pagamento = Pagamento(aluno_id=aluno.id, mes_referencia=mes)
+        db.session.add(pagamento)
+    pagamento.status = "pago"
+    pagamento.data_pagamento = date.today()
+    pagamento.valor = aluno.plano.valor if aluno.plano else 0
+    db.session.commit()
+    flash(f"Pagamento de {aluno.nome} renovado.")
+    return redirect(request.referrer or url_for("alunos.vencidos"))
 
 
 @pagamentos_bp.route("/historico")
