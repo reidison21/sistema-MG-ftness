@@ -41,6 +41,9 @@
   <a href="{{ url_for('alunos.novo') }}" class="btn btn-primary">Novo aluno</a>
   <a href="{{ url_for('pagamentos.listar') }}" class="btn btn-outline-light">Ver pagamentos do mês</a>
   <a href="{{ url_for('pagamentos.historico') }}" class="btn btn-outline-light">Histórico de recebimentos</a>
+  {% if alertas %}
+  <a href="{{ url_for('alunos.vencidos') }}" class="btn btn-outline-light">Vencendo/vencidos ({{ alertas|length }})</a>
+  {% endif %}
 </div>
 
 {% if alertas %}
@@ -55,7 +58,7 @@
       </tr>
     </thead>
     <tbody>
-      {% for aluno, info in alertas %}
+      {% for aluno, info in alertas[:5] %}
       <tr>
         <td><a href="{{ url_for('alunos.detalhe', id=aluno.id) }}">{{ aluno.nome }}</a></td>
         <td>{{ aluno.plano.nome }}</td>
@@ -71,5 +74,8 @@
     </tbody>
   </table>
 </div>
+{% if alertas|length > 5 %}
+<a href="{{ url_for('alunos.vencidos') }}" class="d-inline-block mt-2">Ver todos os {{ alertas|length }}</a>
+{% endif %}
 {% endif %}
 {% endblock %}

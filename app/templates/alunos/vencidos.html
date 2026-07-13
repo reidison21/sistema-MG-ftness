@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Vencidos{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+  <h2 class="mb-0">Pagamentos vencendo e vencidos</h2>
+  <a href="{{ url_for('alunos.listar') }}" class="btn btn-outline-light">Voltar para alunos</a>
+</div>
+
+{% if not itens %}
+  <p class="text-secondary">Nenhum aluno com pagamento vencendo ou vencido no momento. Tudo em dia.</p>
+{% endif %}
+
+<div class="row g-3">
+  {% for aluno, info in itens %}
+  <div class="col-sm-6 col-lg-4">
+    <div class="card stat-card shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <div class="stat-label">{{ aluno.plano.nome }}</div>
+        <h5 class="mb-2">{{ aluno.nome }}</h5>
+
+        {% if info.status == "vencido" %}
+          <p class="stat-value mb-1" style="color:#d19797;">{{ -info.dias }}</p>
+          <span class="badge bg-danger mb-3">dias em atraso</span>
+        {% else %}
+          <p class="stat-value mb-1" style="color:var(--accent-hover);">{{ info.dias }}</p>
+          <span class="badge bg-warning mb-3">dias para vencer</span>
+        {% endif %}
+
+        <p class="text-secondary small mb-3">Vence em {{ info.data_vencimento }} &middot; {{ aluno.telefone }}</p>
+
+        <div class="d-flex gap-2 mt-auto">
+          <a href="{{ url_for('alunos.mensagens', id=aluno.id) }}" class="btn btn-sm btn-outline-success">Cobrar no WhatsApp</a>
+          <a href="{{ url_for('alunos.detalhe', id=aluno.id) }}" class="btn btn-sm btn-outline-secondary">Ver aluno</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

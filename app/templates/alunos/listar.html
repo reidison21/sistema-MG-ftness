@@ -4,6 +4,7 @@
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
   <h2 class="mb-0">Alunos</h2>
   <div class="d-flex gap-2 flex-wrap">
+    <a href="{{ url_for('alunos.vencidos') }}" class="btn btn-outline-light">Vencendo/vencidos</a>
     <a href="{{ url_for('alunos.exportar_csv') }}" class="btn btn-outline-light">Exportar CSV</a>
     <a href="{{ url_for('alunos.novo') }}" class="btn btn-primary">Novo aluno</a>
   </div>

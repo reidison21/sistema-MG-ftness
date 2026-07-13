@@ -78,6 +78,18 @@ def excluir(id):
     return redirect(url_for("alunos.listar"))
 
 
+@alunos_bp.route("/vencidos")
+def vencidos():
+    alunos_ativos = Aluno.query.filter_by(ativo=True).all()
+    itens = []
+    for aluno in alunos_ativos:
+        info = status_vencimento(aluno)
+        if info["status"] in ("vencido", "vencendo"):
+            itens.append((aluno, info))
+    itens.sort(key=lambda item: item[1]["dias"])
+    return render_template("alunos/vencidos.html", itens=itens)
+
+
 @alunos_bp.route("/<int:id>")
 def detalhe(id):
     aluno = Aluno.query.get_or_404(id)
