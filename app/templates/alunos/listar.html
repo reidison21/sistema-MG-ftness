@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "alunos/_macros.html" import badge_vencimento, cartao_aluno_linha %}
 {% block title %}Alunos{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
@@ -15,7 +16,19 @@
   <button type="submit" class="btn btn-outline-light">Buscar</button>
 </form>
 
-<div class="table-responsive">
+{% if not alunos %}
+  <p class="text-secondary">Nenhum aluno encontrado.</p>
+{% endif %}
+
+<!-- Mobile: lista de cards, sem scroll horizontal -->
+<div class="d-md-none d-flex flex-column gap-2">
+  {% for aluno in alunos %}
+  {{ cartao_aluno_linha(aluno, vencimentos[aluno.id]) }}
+  {% endfor %}
+</div>
+
+<!-- Desktop/tablet: tabela -->
+<div class="table-responsive d-none d-md-block">
   <table class="table table-hover align-middle mb-0">
     <thead>
       <tr>
@@ -39,17 +52,7 @@
             <span class="badge bg-secondary">Inativo</span>
           {% endif %}
         </td>
-        <td>
-          {% if v.status == "sem_plano" %}
-            <span class="badge bg-secondary">Sem plano</span>
-          {% elif v.status == "vencido" %}
-            <span class="badge bg-danger">Vencido há {{ -v.dias }}d</span>
-          {% elif v.status == "vencendo" %}
-            <span class="badge bg-warning">Vence em {{ v.dias }}d</span>
-          {% else %}
-            <span class="badge bg-success">Em dia</span>
-          {% endif %}
-        </td>
+        <td>{{ badge_vencimento(v) }}</td>
         <td class="text-end">
           <div class="d-flex gap-1 justify-content-end flex-wrap">
             <a href="{{ url_for('alunos.mensagens', id=aluno.id) }}" class="btn btn-sm btn-outline-success">WhatsApp</a>
@@ -60,8 +63,6 @@
           </div>
         </td>
       </tr>
-      {% else %}
-      <tr><td colspan="5" class="text-center text-secondary">Nenhum aluno encontrado.</td></tr>
       {% endfor %}
     </tbody>
   </table>

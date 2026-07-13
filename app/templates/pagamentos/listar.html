@@ -14,12 +14,40 @@
 
 <p class="text-secondary mb-3">Total recebido neste mês: <strong class="text-light">R$ {{ "%.2f"|format(total_mes) }}</strong></p>
 
-<div class="table-responsive">
+{% if not registros %}
+  <p class="text-secondary">Nenhum aluno ativo cadastrado.</p>
+{% endif %}
+
+<!-- Mobile: cards -->
+<div class="d-md-none d-flex flex-column gap-2">
+  {% for pagamento in registros %}
+  <div class="card p-3 shadow-sm">
+    <div class="d-flex justify-content-between align-items-start gap-2 mb-2">
+      <a href="{{ url_for('alunos.detalhe', id=pagamento.aluno.id) }}" class="fw-semibold">{{ pagamento.aluno.nome }}</a>
+      {% if pagamento.status == "pago" %}
+        <span class="badge bg-success">Pago</span>
+      {% else %}
+        <span class="badge bg-danger">Pendente</span>
+      {% endif %}
+    </div>
+    <p class="text-secondary small mb-3">{{ pagamento.data_pagamento or "Sem pagamento registrado" }}</p>
+    <form method="post" action="{{ url_for('pagamentos.alternar', id=pagamento.id) }}">
+      {% if pagamento.status == "pago" %}
+        <button type="submit" class="btn btn-sm btn-outline-danger w-100">Marcar pendente</button>
+      {% else %}
+        <button type="submit" class="btn btn-sm btn-outline-success w-100">Marcar pago</button>
+      {% endif %}
+    </form>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Desktop/tablet: tabela -->
+<div class="table-responsive d-none d-md-block">
   <table class="table table-hover align-middle mb-0">
     <thead>
       <tr>
         <th>Aluno</th>
-        <th>Telefone</th>
         <th>Status</th>
         <th>Data pagamento</th>
         <th class="text-end">Ação</th>
@@ -28,8 +56,7 @@
     <tbody>
       {% for pagamento in registros %}
       <tr>
-        <td>{{ pagamento.aluno.nome }}</td>
-        <td>{{ pagamento.aluno.telefone }}</td>
+        <td><a href="{{ url_for('alunos.detalhe', id=pagamento.aluno.id) }}">{{ pagamento.aluno.nome }}</a></td>
         <td>
           {% if pagamento.status == "pago" %}
             <span class="badge bg-success">Pago</span>
@@ -48,8 +75,6 @@
           </form>
         </td>
       </tr>
-      {% else %}
-      <tr><td colspan="5" class="text-center text-secondary">Nenhum aluno ativo cadastrado.</td></tr>
       {% endfor %}
     </tbody>
   </table>
