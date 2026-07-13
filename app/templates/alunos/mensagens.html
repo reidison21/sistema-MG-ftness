@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Enviar mensagem{% endblock %}
+{% block content %}
+<h2 class="mb-1">Enviar WhatsApp para {{ aluno.nome }}</h2>
+<p class="text-secondary mb-4">{{ aluno.telefone }}</p>
+
+{% if not links %}
+  <div class="alert alert-warning">
+    Nenhuma mensagem padrão cadastrada ainda.
+    <a href="{{ url_for('mensagens.novo') }}">Criar uma mensagem</a>.
+  </div>
+{% endif %}
+
+<div class="row g-3">
+  {% for item in links %}
+  <div class="col-md-6">
+    <div class="card msg-card shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title">{{ item.titulo }}</h5>
+        <p class="card-text text-secondary" style="white-space: pre-wrap;">{{ item.texto }}</p>
+        <a href="{{ item.link }}" target="_blank" class="btn btn-success mt-auto">Enviar pelo WhatsApp</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<a href="{{ url_for('alunos.listar') }}" class="btn btn-link mt-4">Voltar</a>
+{% endblock %}

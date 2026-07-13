@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Alunos{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Alunos</h2>
+  <a href="{{ url_for('alunos.novo') }}" class="btn btn-primary">Novo aluno</a>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Telefone</th>
+        <th>Plano</th>
+        <th>Status</th>
+        <th class="text-end">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for aluno in alunos %}
+      <tr>
+        <td>{{ aluno.nome }}</td>
+        <td>{{ aluno.telefone }}</td>
+        <td>{{ aluno.plano.nome if aluno.plano else "-" }}</td>
+        <td>
+          {% if aluno.ativo %}
+            <span class="badge bg-success">Ativo</span>
+          {% else %}
+            <span class="badge bg-secondary">Inativo</span>
+          {% endif %}
+        </td>
+        <td class="text-end">
+          <div class="d-flex gap-1 justify-content-end flex-wrap">
+            <a href="{{ url_for('alunos.mensagens', id=aluno.id) }}" class="btn btn-sm btn-outline-success">WhatsApp</a>
+            <a href="{{ url_for('alunos.editar', id=aluno.id) }}" class="btn btn-sm btn-outline-secondary">Editar</a>
+            <form method="post" action="{{ url_for('alunos.excluir', id=aluno.id) }}" onsubmit="return confirm('Remover este aluno?');">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="text-center text-secondary">Nenhum aluno cadastrado ainda.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

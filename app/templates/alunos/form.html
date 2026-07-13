@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}{{ "Editar aluno" if aluno else "Novo aluno" }}{% endblock %}
+{% block content %}
+<h2 class="mb-4">{{ "Editar aluno" if aluno else "Novo aluno" }}</h2>
+
+<form method="post" class="card p-4 shadow-sm" style="max-width: 500px;">
+  <div class="mb-3">
+    <label class="form-label">Nome</label>
+    <input type="text" name="nome" class="form-control" value="{{ aluno.nome if aluno else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Telefone (WhatsApp, com DDD)</label>
+    <input type="text" name="telefone" class="form-control" placeholder="Ex: (11) 91234-5678" value="{{ aluno.telefone if aluno else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">E-mail (opcional)</label>
+    <input type="email" name="email" class="form-control" value="{{ aluno.email if aluno else '' }}">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Plano</label>
+    <select name="plano_id" class="form-select">
+      <option value="">-- Sem plano --</option>
+      {% for plano in planos %}
+      <option value="{{ plano.id }}" {% if aluno and aluno.plano_id == plano.id %}selected{% endif %}>{{ plano.nome }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  {% if not aluno %}
+  <div class="mb-3">
+    <label class="form-label">Data de matrícula</label>
+    <input type="date" name="data_matricula" class="form-control">
+  </div>
+  {% else %}
+  <div class="form-check mb-3">
+    <input type="checkbox" name="ativo" class="form-check-input" id="ativo" {% if aluno.ativo %}checked{% endif %}>
+    <label class="form-check-label" for="ativo">Aluno ativo</label>
+  </div>
+  {% endif %}
+  <button type="submit" class="btn btn-primary">Salvar</button>
+  <a href="{{ url_for('alunos.listar') }}" class="btn btn-link">Cancelar</a>
+</form>
+{% endblock %}

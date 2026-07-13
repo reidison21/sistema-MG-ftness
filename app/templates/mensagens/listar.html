@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Mensagens{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Mensagens padrão</h2>
+  <a href="{{ url_for('mensagens.novo') }}" class="btn btn-primary">Nova mensagem</a>
+</div>
+<p class="text-secondary">Use <code>{{ '{nome}' }}</code> no texto para que o nome do aluno seja preenchido automaticamente.</p>
+
+<div class="row g-3">
+  {% for t in templates %}
+  <div class="col-md-6">
+    <div class="card msg-card shadow-sm h-100">
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title">{{ t.titulo }}</h5>
+        <p class="card-text text-secondary" style="white-space: pre-wrap;">{{ t.texto }}</p>
+        <div class="mt-auto">
+          <a href="{{ url_for('mensagens.editar', id=t.id) }}" class="btn btn-sm btn-outline-secondary">Editar</a>
+          <form method="post" action="{{ url_for('mensagens.excluir', id=t.id) }}" class="d-inline" onsubmit="return confirm('Remover esta mensagem?');">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <p class="text-center text-secondary">Nenhuma mensagem cadastrada ainda.</p>
+  {% endfor %}
+</div>
+{% endblock %}

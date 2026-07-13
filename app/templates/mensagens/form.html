@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}{{ "Editar mensagem" if template else "Nova mensagem" }}{% endblock %}
+{% block content %}
+<h2 class="mb-4">{{ "Editar mensagem" if template else "Nova mensagem" }}</h2>
+
+<form method="post" class="card p-4 shadow-sm" style="max-width: 600px;">
+  <div class="mb-3">
+    <label class="form-label">Título (só para identificação interna)</label>
+    <input type="text" name="titulo" class="form-control" value="{{ template.titulo if template else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Texto da mensagem</label>
+    <textarea name="texto" class="form-control" rows="5" placeholder="Ex: Olá {nome}, tudo bem? Sua mensalidade está pendente." required>{{ template.texto if template else '' }}</textarea>
+    <div class="form-text">Use <code>{{ '{nome}' }}</code> para inserir o nome do aluno automaticamente.</div>
+  </div>
+  <button type="submit" class="btn btn-primary">Salvar</button>
+  <a href="{{ url_for('mensagens.listar') }}" class="btn btn-link">Cancelar</a>
+</form>
+{% endblock %}

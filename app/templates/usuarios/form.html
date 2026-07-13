@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}{{ "Editar usuário" if usuario else "Novo usuário" }}{% endblock %}
+{% block content %}
+<h2 class="mb-4">{{ "Editar usuário" if usuario else "Novo usuário" }}</h2>
+
+<form method="post" class="card p-4 shadow-sm" style="max-width: 500px;">
+  <div class="mb-3">
+    <label class="form-label">Nome</label>
+    <input type="text" name="nome" class="form-control" value="{{ usuario.nome if usuario else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Login (usado para entrar no sistema)</label>
+    {% if usuario %}
+      <input type="text" class="form-control" value="{{ usuario.usuario }}" disabled>
+    {% else %}
+      <input type="text" name="usuario" class="form-control" required>
+    {% endif %}
+  </div>
+  <div class="mb-3">
+    <label class="form-label">{{ "Nova senha (deixe em branco para manter a atual)" if usuario else "Senha" }}</label>
+    <input type="password" name="senha" class="form-control" {% if not usuario %}required{% endif %}>
+  </div>
+  <button type="submit" class="btn btn-primary">Salvar</button>
+  <a href="{{ url_for('usuarios.listar') }}" class="btn btn-link">Cancelar</a>
+</form>
+{% endblock %}

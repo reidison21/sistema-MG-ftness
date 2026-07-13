@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ "Editar plano" if plano else "Novo plano" }}{% endblock %}
+{% block content %}
+<h2 class="mb-4">{{ "Editar plano" if plano else "Novo plano" }}</h2>
+
+<form method="post" class="card p-4 shadow-sm" style="max-width: 500px;">
+  <div class="mb-3">
+    <label class="form-label">Nome do plano</label>
+    <input type="text" name="nome" class="form-control" value="{{ plano.nome if plano else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Valor (R$)</label>
+    <input type="text" name="valor" class="form-control" placeholder="Ex: 99.90" value="{{ plano.valor if plano else '' }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Duração (dias)</label>
+    <input type="number" name="duracao_dias" class="form-control" value="{{ plano.duracao_dias if plano else 30 }}" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Salvar</button>
+  <a href="{{ url_for('planos.listar') }}" class="btn btn-link">Cancelar</a>
+</form>
+{% endblock %}

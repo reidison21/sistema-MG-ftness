@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Planos{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h2>Planos</h2>
+  <a href="{{ url_for('planos.novo') }}" class="btn btn-primary">Novo plano</a>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-hover align-middle mb-0">
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Valor</th>
+        <th>Duração (dias)</th>
+        <th class="text-end">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for plano in planos %}
+      <tr>
+        <td>{{ plano.nome }}</td>
+        <td>R$ {{ "%.2f"|format(plano.valor) }}</td>
+        <td>{{ plano.duracao_dias }}</td>
+        <td class="text-end">
+          <div class="d-flex gap-1 justify-content-end flex-wrap">
+            <a href="{{ url_for('planos.editar', id=plano.id) }}" class="btn btn-sm btn-outline-secondary">Editar</a>
+            <form method="post" action="{{ url_for('planos.excluir', id=plano.id) }}" onsubmit="return confirm('Remover este plano?');">
+              <button type="submit" class="btn btn-sm btn-outline-danger">Excluir</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="text-center text-secondary">Nenhum plano cadastrado ainda.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

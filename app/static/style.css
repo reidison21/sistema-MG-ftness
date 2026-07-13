@@ -1,0 +1,300 @@
+:root {
+  --bg: #0a0a0b;
+  --surface: #131315;
+  --surface-2: #1a1a1d;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --text: #e7e5e0;
+  --text-muted: #8c8a85;
+  --accent: #c6a35d;
+  --accent-soft: rgba(198, 163, 93, 0.14);
+  --accent-hover: #d8b877;
+}
+
+html[data-bs-theme="dark"] body {
+  background: var(--bg);
+  font-family: "Inter", "Segoe UI", sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  font-size: 0.95rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+h1, h2, h3, h4, h5 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* Navbar */
+.navbar.gustavo-nav {
+  background: rgba(10, 10, 11, 0.92) !important;
+  border-bottom: 1px solid var(--border);
+}
+
+.navbar-brand {
+  font-family: "Cormorant Garamond", "Georgia", serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: 0.04em;
+  color: var(--text) !important;
+}
+
+.navbar-brand .brand-mark {
+  color: var(--accent);
+}
+
+.navbar .nav-link {
+  font-family: "Inter", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted) !important;
+  padding: 0.6rem 0.9rem !important;
+  border-bottom: 1px solid transparent;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.navbar .nav-link:hover {
+  color: var(--text) !important;
+}
+
+.navbar .nav-link.active {
+  color: var(--accent) !important;
+  border-bottom-color: var(--accent);
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  box-shadow: none;
+}
+
+.stat-card {
+  border-top: 2px solid var(--border-strong);
+}
+
+.stat-card .stat-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.stat-card .stat-value {
+  font-family: "Inter", sans-serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* Buttons */
+.btn {
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  letter-spacing: 0.01em;
+}
+
+.btn-primary {
+  --bs-btn-bg: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-bg: var(--accent-hover);
+  --bs-btn-hover-border-color: var(--accent-hover);
+  --bs-btn-active-bg: var(--accent-hover);
+  --bs-btn-active-border-color: var(--accent-hover);
+  --bs-btn-color: #14110a;
+  --bs-btn-hover-color: #14110a;
+}
+
+.btn-outline-light {
+  --bs-btn-border-color: var(--border-strong);
+  --bs-btn-color: var(--text-muted);
+  --bs-btn-hover-bg: var(--surface-2);
+  --bs-btn-hover-border-color: var(--border-strong);
+  --bs-btn-hover-color: var(--text);
+}
+
+.btn-outline-secondary {
+  --bs-btn-border-color: var(--border-strong);
+  --bs-btn-color: var(--text-muted);
+  --bs-btn-hover-bg: var(--surface-2);
+  --bs-btn-hover-color: var(--text);
+}
+
+.btn-outline-success {
+  --bs-btn-color: #7fb88f;
+  --bs-btn-border-color: rgba(127, 184, 143, 0.4);
+  --bs-btn-hover-bg: rgba(127, 184, 143, 0.12);
+  --bs-btn-hover-color: #a6d3b1;
+  --bs-btn-hover-border-color: rgba(127, 184, 143, 0.4);
+}
+
+.btn-outline-danger {
+  --bs-btn-color: #c07a7a;
+  --bs-btn-border-color: rgba(192, 122, 122, 0.4);
+  --bs-btn-hover-bg: rgba(192, 122, 122, 0.12);
+  --bs-btn-hover-color: #d99f9f;
+  --bs-btn-hover-border-color: rgba(192, 122, 122, 0.4);
+}
+
+.btn-success {
+  --bs-btn-bg: #4a6b52;
+  --bs-btn-border-color: #4a6b52;
+  --bs-btn-hover-bg: #588062;
+  --bs-btn-hover-border-color: #588062;
+}
+
+/* Tables */
+.table {
+  --bs-table-bg: transparent;
+  font-size: 0.88rem;
+}
+
+.table-responsive {
+  border-radius: 6px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.table thead {
+  background: var(--surface-2);
+  text-transform: uppercase;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.table thead th {
+  font-weight: 500;
+  padding-top: 0.85rem;
+  padding-bottom: 0.85rem;
+}
+
+.table > :not(caption) > * > * {
+  border-bottom-color: var(--border);
+}
+
+/* Badges -> refined outline pills */
+.badge {
+  border-radius: 3px;
+  padding: 0.38em 0.65em;
+  font-weight: 500;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge.bg-success {
+  background: rgba(127, 184, 143, 0.14) !important;
+  color: #8fc79c;
+  border: 1px solid rgba(127, 184, 143, 0.35);
+}
+
+.badge.bg-danger {
+  background: rgba(192, 122, 122, 0.14) !important;
+  color: #d19797;
+  border: 1px solid rgba(192, 122, 122, 0.35);
+}
+
+.badge.bg-secondary {
+  background: var(--surface-2) !important;
+  color: var(--text-muted);
+  border: 1px solid var(--border-strong);
+}
+
+/* Login */
+.login-shell {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 6px;
+  padding: 2.75rem 2.25rem;
+}
+
+.login-wordmark {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.03em;
+  margin-bottom: 0.25rem;
+}
+
+.login-wordmark .brand-mark {
+  color: var(--accent);
+}
+
+/* Form controls */
+.form-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.form-control, .form-select {
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: var(--surface-2);
+  color: var(--text);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.form-control::placeholder {
+  color: #55534d;
+}
+
+.form-control:disabled {
+  background-color: var(--surface);
+  color: var(--text-muted);
+}
+
+/* Message template cards */
+.msg-card .card-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+hr, .border { border-color: var(--border) !important; }
+
+a { color: var(--accent); }
+a:hover { color: var(--accent-hover); }
+
+code {
+  color: var(--accent);
+  background: var(--surface-2);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+}
