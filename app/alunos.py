@@ -80,14 +80,19 @@ def excluir(id):
 
 @alunos_bp.route("/vencidos")
 def vencidos():
-    alunos_ativos = Aluno.query.filter_by(ativo=True).all()
-    itens = []
-    for aluno in alunos_ativos:
-        info = status_vencimento(aluno)
-        if info["status"] in ("vencido", "vencendo"):
-            itens.append((aluno, info))
-    itens.sort(key=lambda item: item[1]["dias"])
-    return render_template("alunos/vencidos.html", itens=itens)
+    filtro = request.args.get("status", "pendentes")
+
+    alunos_ativos = Aluno.query.filter_by(ativo=True).order_by(Aluno.nome).all()
+    itens = [(aluno, status_vencimento(aluno)) for aluno in alunos_ativos]
+
+    if filtro == "pendentes":
+        itens = [i for i in itens if i[1]["status"] in ("vencido", "vencendo")]
+    elif filtro in ("vencido", "vencendo", "em_dia", "sem_plano"):
+        itens = [i for i in itens if i[1]["status"] == filtro]
+    # filtro == "todos" -> mantém todos os alunos ativos
+
+    itens.sort(key=lambda item: item[1]["dias"] if item[1]["dias"] is not None else 99999)
+    return render_template("alunos/vencidos.html", itens=itens, filtro=filtro)
 
 
 @alunos_bp.route("/<int:id>")

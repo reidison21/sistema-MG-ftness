@@ -1,68 +1,28 @@
 {% extends "base.html" %}
-{% block title %}Vencidos{% endblock %}
+{% from "alunos/_macros.html" import cartao_vencimento %}
+{% block title %}Situação dos pagamentos{% endblock %}
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
-  <h2 class="mb-0">Pagamentos vencendo e vencidos</h2>
+<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <h2 class="mb-0">Situação dos pagamentos</h2>
   <a href="{{ url_for('alunos.listar') }}" class="btn btn-outline-light">Voltar para alunos</a>
 </div>
 
+<div class="d-flex gap-2 mb-4 flex-wrap">
+  <a href="{{ url_for('alunos.vencidos', status='pendentes') }}" class="btn btn-sm {{ 'btn-primary' if filtro == 'pendentes' else 'btn-outline-light' }}">Vencendo/Vencidos</a>
+  <a href="{{ url_for('alunos.vencidos', status='vencido') }}" class="btn btn-sm {{ 'btn-primary' if filtro == 'vencido' else 'btn-outline-light' }}">Vencidos</a>
+  <a href="{{ url_for('alunos.vencidos', status='vencendo') }}" class="btn btn-sm {{ 'btn-primary' if filtro == 'vencendo' else 'btn-outline-light' }}">Vencendo</a>
+  <a href="{{ url_for('alunos.vencidos', status='em_dia') }}" class="btn btn-sm {{ 'btn-primary' if filtro == 'em_dia' else 'btn-outline-light' }}">Em dia</a>
+  <a href="{{ url_for('alunos.vencidos', status='todos') }}" class="btn btn-sm {{ 'btn-primary' if filtro == 'todos' else 'btn-outline-light' }}">Todos</a>
+</div>
+
 {% if not itens %}
-  <p class="text-secondary">Nenhum aluno com pagamento vencendo ou vencido no momento. Tudo em dia.</p>
+  <p class="text-secondary">Nenhum aluno encontrado para esse filtro.</p>
 {% endif %}
 
 <div class="row g-3">
   {% for aluno, info in itens %}
   <div class="col-sm-6 col-lg-4">
-    <div class="card stat-card shadow-sm h-100">
-      <div class="card-body d-flex flex-column">
-        <div class="stat-label">{{ aluno.plano.nome }}</div>
-        <h5 class="mb-2">{{ aluno.nome }}</h5>
-
-        {% if info.status == "vencido" %}
-          <p class="stat-value mb-1" style="color:#d19797;">{{ -info.dias }}</p>
-          <span class="badge bg-danger mb-3">dias em atraso</span>
-        {% else %}
-          <p class="stat-value mb-1" style="color:var(--accent-hover);">{{ info.dias }}</p>
-          <span class="badge bg-warning mb-3">dias para vencer</span>
-        {% endif %}
-
-        <p class="text-secondary small mb-3">Vence em {{ info.data_vencimento }} &middot; {{ aluno.telefone }}</p>
-
-        <div class="mt-auto">
-          <form method="post" action="{{ url_for('pagamentos.renovar', aluno_id=aluno.id) }}" onsubmit="return confirm('Marcar {{ aluno.nome }} como pago hoje e renovar por mais {{ aluno.plano.duracao_dias }} dias?');">
-            <button type="submit" class="btn btn-primary w-100">Renovar hoje</button>
-          </form>
-
-          <button
-            type="button"
-            class="btn btn-link btn-sm p-0 mt-2 text-decoration-none"
-            onclick="document.getElementById('data-form-{{ aluno.id }}').classList.toggle('d-none')"
-          >
-            Pagou em outro dia? Escolher data
-          </button>
-
-          <form
-            id="data-form-{{ aluno.id }}"
-            method="post"
-            action="{{ url_for('pagamentos.renovar', aluno_id=aluno.id) }}"
-            class="d-none mt-2"
-            onsubmit="return confirm('Renovar {{ aluno.nome }} a partir da data escolhida?');"
-          >
-            <div class="input-group input-group-sm">
-              <input type="date" name="data" class="form-control" required>
-              <button type="submit" class="btn btn-outline-light">Confirmar</button>
-            </div>
-          </form>
-
-          <hr class="my-3">
-
-          <div class="d-flex gap-2">
-            <a href="{{ url_for('alunos.mensagens', id=aluno.id) }}" class="btn btn-sm btn-outline-success flex-fill">WhatsApp</a>
-            <a href="{{ url_for('alunos.detalhe', id=aluno.id) }}" class="btn btn-sm btn-outline-secondary flex-fill">Ver aluno</a>
-          </div>
-        </div>
-      </div>
-    </div>
+    {{ cartao_vencimento(aluno, info) }}
   </div>
   {% endfor %}
 </div>

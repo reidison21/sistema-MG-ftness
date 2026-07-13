@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% from "alunos/_macros.html" import cartao_vencimento %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
 <h2 class="mb-4">Dashboard <span class="text-secondary fs-6">— {{ mes_atual }}</span></h2>
@@ -48,34 +49,15 @@
 
 {% if alertas %}
 <h5 class="mt-5 mb-3">Planos vencendo ou vencidos</h5>
-<div class="table-responsive">
-  <table class="table table-hover align-middle mb-0">
-    <thead>
-      <tr>
-        <th>Aluno</th>
-        <th>Plano</th>
-        <th>Situação</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for aluno, info in alertas[:5] %}
-      <tr>
-        <td><a href="{{ url_for('alunos.detalhe', id=aluno.id) }}">{{ aluno.nome }}</a></td>
-        <td>{{ aluno.plano.nome }}</td>
-        <td>
-          {% if info.status == "vencido" %}
-            <span class="badge bg-danger">Vencido há {{ -info.dias }}d</span>
-          {% else %}
-            <span class="badge bg-warning">Vence em {{ info.dias }}d</span>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+<div class="row g-3">
+  {% for aluno, info in alertas[:6] %}
+  <div class="col-sm-6 col-lg-4">
+    {{ cartao_vencimento(aluno, info) }}
+  </div>
+  {% endfor %}
 </div>
-{% if alertas|length > 5 %}
-<a href="{{ url_for('alunos.vencidos') }}" class="d-inline-block mt-2">Ver todos os {{ alertas|length }}</a>
+{% if alertas|length > 6 %}
+<a href="{{ url_for('alunos.vencidos') }}" class="d-inline-block mt-3">Ver todos os {{ alertas|length }}</a>
 {% endif %}
 {% endif %}
 {% endblock %}
