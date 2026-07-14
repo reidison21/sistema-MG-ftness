@@ -13,6 +13,7 @@
         <th>Nome</th>
         <th>Valor</th>
         <th>Duração (dias)</th>
+        <th>Alunos</th>
         <th class="text-end">Ações</th>
       </tr>
     </thead>
@@ -22,6 +23,7 @@
         <td>{{ plano.nome }}</td>
         <td>R$ {{ "%.2f"|format(plano.valor) }}</td>
         <td>{{ plano.duracao_dias }}</td>
+        <td><span class="badge bg-secondary">{{ contagem[plano.id] }}</span></td>
         <td class="text-end">
           <div class="d-flex gap-1 justify-content-end flex-wrap">
             <a href="{{ url_for('planos.editar', id=plano.id) }}" class="btn btn-sm btn-outline-secondary">Editar</a>
@@ -32,7 +34,7 @@
         </td>
       </tr>
       {% else %}
-      <tr><td colspan="4" class="text-center text-secondary">Nenhum plano cadastrado ainda.</td></tr>
+      <tr><td colspan="5" class="text-center text-secondary">Nenhum plano cadastrado ainda.</td></tr>
       {% endfor %}
     </tbody>
   </table>

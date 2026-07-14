@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 
-from .models import Plano, db
+from .models import Aluno, Plano, db
 
 planos_bp = Blueprint("planos", __name__, url_prefix="/planos")
 
@@ -8,7 +8,11 @@ planos_bp = Blueprint("planos", __name__, url_prefix="/planos")
 @planos_bp.route("/")
 def listar():
     planos = Plano.query.order_by(Plano.nome).all()
-    return render_template("planos/listar.html", planos=planos)
+    contagem = {
+        plano.id: Aluno.query.filter_by(plano_id=plano.id, ativo=True).count()
+        for plano in planos
+    }
+    return render_template("planos/listar.html", planos=planos, contagem=contagem)
 
 
 @planos_bp.route("/novo", methods=["GET", "POST"])

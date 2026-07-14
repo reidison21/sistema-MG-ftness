@@ -6,9 +6,9 @@
   --border-strong: rgba(255, 255, 255, 0.16);
   --text: #e7e5e0;
   --text-muted: #8c8a85;
-  --accent: #c6a35d;
-  --accent-soft: rgba(198, 163, 93, 0.14);
-  --accent-hover: #d8b877;
+  --accent: #a7acb4;
+  --accent-soft: rgba(167, 172, 180, 0.16);
+  --accent-hover: #c5c9d0;
 }
 
 html[data-bs-theme="dark"] body {
@@ -117,8 +117,8 @@ h1, h2, h3, h4, h5 {
   --bs-btn-hover-border-color: var(--accent-hover);
   --bs-btn-active-bg: var(--accent-hover);
   --bs-btn-active-border-color: var(--accent-hover);
-  --bs-btn-color: #14110a;
-  --bs-btn-hover-color: #14110a;
+  --bs-btn-color: #14161a;
+  --bs-btn-hover-color: #14161a;
 }
 
 .btn-outline-light {
@@ -221,7 +221,7 @@ h1, h2, h3, h4, h5 {
 .badge.bg-warning {
   background: var(--accent-soft) !important;
   color: var(--accent-hover);
-  border: 1px solid rgba(198, 163, 93, 0.4);
+  border: 1px solid rgba(167, 172, 180, 0.4);
 }
 
 /* Login */
