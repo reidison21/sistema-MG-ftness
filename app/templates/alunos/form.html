@@ -30,7 +30,17 @@
     <label class="form-label">Data de matrícula</label>
     <input type="date" name="data_matricula" class="form-control">
   </div>
+  <div class="mb-3">
+    <label class="form-label">Vencimento (opcional)</label>
+    <input type="date" name="vencimento" class="form-control">
+    <div class="form-text">Deixe em branco para calcular automaticamente a partir do plano.</div>
+  </div>
   {% else %}
+  <div class="mb-3">
+    <label class="form-label">Vencimento</label>
+    <input type="date" name="vencimento" class="form-control" value="{{ aluno.vencimento.isoformat() if aluno.vencimento else '' }}">
+    <div class="form-text">Data em que a próxima mensalidade vence. Deixe em branco se ainda não houver vencimento definido.</div>
+  </div>
   <div class="form-check mb-3">
     <input type="checkbox" name="ativo" class="form-check-input" id="ativo" {% if aluno.ativo %}checked{% endif %}>
     <label class="form-check-label" for="ativo">Aluno ativo</label>

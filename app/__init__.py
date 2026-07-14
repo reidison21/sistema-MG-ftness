@@ -2,9 +2,10 @@ import os
 from datetime import timedelta
 
 from flask import Flask, redirect, request, session, url_for
+from sqlalchemy import inspect, text
 from werkzeug.security import generate_password_hash
 
-from .models import Usuario, db
+from .models import Aluno, Pagamento, Usuario, db
 
 
 def create_app():
@@ -48,6 +49,22 @@ def create_app():
 
     with app.app_context():
         db.create_all()
+
+        colunas_aluno = [c["name"] for c in inspect(db.engine).get_columns("aluno")]
+        if "vencimento" not in colunas_aluno:
+            db.session.execute(text("ALTER TABLE aluno ADD COLUMN vencimento DATE"))
+            db.session.commit()
+
+            for aluno in Aluno.query.filter(Aluno.plano_id.isnot(None)).all():
+                ultimo_pago = (
+                    Pagamento.query.filter_by(aluno_id=aluno.id, status="pago")
+                    .filter(Pagamento.data_pagamento.isnot(None))
+                    .order_by(Pagamento.data_pagamento.desc())
+                    .first()
+                )
+                base = ultimo_pago.data_pagamento if ultimo_pago else aluno.data_matricula
+                aluno.vencimento = base + timedelta(days=aluno.plano.duracao_dias)
+            db.session.commit()
 
         if Usuario.query.count() == 0:
             admin_user = os.environ.get("ADMIN_USER", "admin")

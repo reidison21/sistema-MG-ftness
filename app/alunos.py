@@ -1,7 +1,7 @@
 import csv
 import io
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from urllib.parse import quote
 
 from flask import Blueprint, Response, flash, redirect, render_template, request, url_for
@@ -35,16 +35,29 @@ def novo():
     planos = Plano.query.order_by(Plano.nome).all()
     if request.method == "POST":
         data_matricula_str = request.form.get("data_matricula")
+        data_matricula = (
+            datetime.strptime(data_matricula_str, "%Y-%m-%d").date()
+            if data_matricula_str
+            else datetime.utcnow().date()
+        )
+        plano_id = request.form.get("plano_id") or None
+        plano = Plano.query.get(plano_id) if plano_id else None
+
+        vencimento_str = request.form.get("vencimento")
+        if vencimento_str:
+            vencimento = datetime.strptime(vencimento_str, "%Y-%m-%d").date()
+        elif plano:
+            vencimento = data_matricula + timedelta(days=plano.duracao_dias)
+        else:
+            vencimento = None
+
         aluno = Aluno(
             nome=request.form["nome"],
             telefone=normalizar_telefone(request.form["telefone"]),
             email=request.form.get("email") or None,
-            plano_id=request.form.get("plano_id") or None,
-            data_matricula=(
-                datetime.strptime(data_matricula_str, "%Y-%m-%d").date()
-                if data_matricula_str
-                else datetime.utcnow().date()
-            ),
+            plano_id=plano_id,
+            data_matricula=data_matricula,
+            vencimento=vencimento,
         )
         db.session.add(aluno)
         db.session.commit()
@@ -63,6 +76,10 @@ def editar(id):
         aluno.email = request.form.get("email") or None
         aluno.plano_id = request.form.get("plano_id") or None
         aluno.ativo = bool(request.form.get("ativo"))
+        vencimento_str = request.form.get("vencimento")
+        aluno.vencimento = (
+            datetime.strptime(vencimento_str, "%Y-%m-%d").date() if vencimento_str else None
+        )
         db.session.commit()
         flash("Aluno atualizado.")
         return redirect(url_for("alunos.listar"))

@@ -22,6 +22,7 @@ class Aluno(db.Model):
     plano_id = db.Column(db.Integer, db.ForeignKey("plano.id"))
     data_matricula = db.Column(db.Date, nullable=False, default=date.today)
     ativo = db.Column(db.Boolean, nullable=False, default=True)
+    vencimento = db.Column(db.Date)
 
     pagamentos = db.relationship(
         "Pagamento", backref="aluno", lazy=True, cascade="all, delete-orphan"

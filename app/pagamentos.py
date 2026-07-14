@@ -1,6 +1,6 @@
 import csv
 import io
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 
 from flask import Blueprint, Response, flash, redirect, render_template, request, url_for
 from sqlalchemy import func
@@ -42,6 +42,10 @@ def alternar(id):
         pagamento.status = "pago"
         pagamento.data_pagamento = date.today()
         pagamento.valor = pagamento.aluno.plano.valor if pagamento.aluno.plano else 0
+        if pagamento.aluno.plano:
+            pagamento.aluno.vencimento = date.today() + timedelta(
+                days=pagamento.aluno.plano.duracao_dias
+            )
     db.session.commit()
     return redirect(url_for("pagamentos.listar", mes=pagamento.mes_referencia))
 
@@ -63,6 +67,8 @@ def renovar(aluno_id):
     pagamento.status = "pago"
     pagamento.data_pagamento = data_pagamento
     pagamento.valor = aluno.plano.valor if aluno.plano else 0
+    if aluno.plano:
+        aluno.vencimento = data_pagamento + timedelta(days=aluno.plano.duracao_dias)
     db.session.commit()
     flash(f"Pagamento de {aluno.nome} renovado a partir de {data_pagamento.strftime('%d/%m/%Y')}.")
     return redirect(request.referrer or url_for("alunos.vencidos"))
