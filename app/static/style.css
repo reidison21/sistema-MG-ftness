@@ -39,10 +39,15 @@ html[data-theme="light"] {
 
 /* Tema vermelho */
 html[data-theme="red"] {
-  --accent: #c0483f;
-  --accent-soft: rgba(192, 72, 63, 0.16);
-  --accent-hover: #d66158;
-  --accent-border: rgba(192, 72, 63, 0.4);
+  --bg: #1a0c0b;
+  --surface: #241412;
+  --surface-2: #2d1917;
+  --border: rgba(255, 120, 110, 0.14);
+  --border-strong: rgba(255, 120, 110, 0.22);
+  --accent: #d3554a;
+  --accent-soft: rgba(211, 85, 74, 0.18);
+  --accent-hover: #e8756a;
+  --accent-border: rgba(211, 85, 74, 0.45);
   --on-accent: #ffffff;
 }
 
@@ -351,4 +356,38 @@ code {
   background: var(--surface-2);
   padding: 0.1em 0.4em;
   border-radius: 3px;
+}
+
+/* Cobrinhas do tema vermelho */
+.tema-vermelho-fx {
+  display: none;
+}
+
+html[data-theme="red"] .tema-vermelho-fx {
+  display: block;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+html[data-theme="red"] .tema-vermelho-fx .cobra {
+  position: absolute;
+  left: 0;
+  color: rgba(255, 130, 118, 0.4);
+  animation-name: rastejar;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes rastejar {
+  from { transform: translateX(-280px); }
+  to { transform: translateX(110vw); }
+}
+
+@media (max-width: 576px) {
+  html[data-theme="red"] .tema-vermelho-fx .cobra:nth-child(n + 4) {
+    display: none;
+  }
 }
