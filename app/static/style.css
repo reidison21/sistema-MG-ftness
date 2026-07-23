@@ -358,7 +358,7 @@ code {
   border-radius: 3px;
 }
 
-/* Cobrinhas do tema vermelho */
+/* Efeito tech do tema vermelho */
 .tema-vermelho-fx {
   display: none;
 }
@@ -372,22 +372,61 @@ html[data-theme="red"] .tema-vermelho-fx {
   z-index: -1;
 }
 
-html[data-theme="red"] .tema-vermelho-fx .cobra {
+html[data-theme="red"] .grid-tech {
+  position: absolute;
+  inset: -50px;
+  background-image:
+    linear-gradient(rgba(255, 107, 94, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 107, 94, 0.09) 1px, transparent 1px);
+  background-size: 42px 42px;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
+  mask-image: radial-gradient(ellipse at center, black 0%, transparent 72%);
+  animation: grid-pan 45s linear infinite;
+}
+
+@keyframes grid-pan {
+  from { transform: translate(0, 0); }
+  to { transform: translate(42px, 42px); }
+}
+
+html[data-theme="red"] .tema-vermelho-fx::after {
+  content: "";
+  position: absolute;
+  width: 60vmax;
+  height: 60vmax;
+  top: -22vmax;
+  right: -20vmax;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 107, 94, 0.14), transparent 70%);
+  animation: pulso-glow 9s ease-in-out infinite;
+}
+
+@keyframes pulso-glow {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
+}
+
+.cobras-wrap .cobra {
   position: absolute;
   left: 0;
-  color: rgba(255, 130, 118, 0.4);
+  filter: drop-shadow(0 0 5px rgba(255, 107, 94, 0.6)) drop-shadow(0 0 12px rgba(255, 107, 94, 0.3));
   animation-name: rastejar;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
 }
 
+.cobras-wrap .cobra-head {
+  fill: #ffe4df;
+  filter: drop-shadow(0 0 4px #fff);
+}
+
 @keyframes rastejar {
-  from { transform: translateX(-280px); }
+  from { transform: translateX(-300px); }
   to { transform: translateX(110vw); }
 }
 
 @media (max-width: 576px) {
-  html[data-theme="red"] .tema-vermelho-fx .cobra:nth-child(n + 4) {
+  .cobras-wrap .cobra:nth-child(n + 4) {
     display: none;
   }
 }

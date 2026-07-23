@@ -18,12 +18,34 @@
   <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
 </head>
 <body>
+  {% set cobras = [
+    {'top': 5, 'width': 260, 'dur': 12, 'delay': -1},
+    {'top': 18, 'width': 320, 'dur': 17, 'delay': -6},
+    {'top': 32, 'width': 220, 'dur': 10, 'delay': -3},
+    {'top': 47, 'width': 300, 'dur': 15, 'delay': -9},
+    {'top': 61, 'width': 240, 'dur': 13, 'delay': -5},
+    {'top': 75, 'width': 280, 'dur': 19, 'delay': -12},
+    {'top': 88, 'width': 210, 'dur': 11, 'delay': -7},
+  ] %}
   <div class="tema-vermelho-fx" aria-hidden="true">
-    <svg class="cobra" style="top: 6%; width: 200px; animation-duration: 19s; animation-delay: -2s;" viewBox="0 0 200 40"><path d="M0 20 Q 25 0 50 20 T 100 20 T 150 20 T 200 20" stroke="currentColor" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="200" cy="20" r="5" fill="currentColor"/></svg>
-    <svg class="cobra" style="top: 22%; width: 260px; animation-duration: 26s; animation-delay: -10s;" viewBox="0 0 200 40"><path d="M0 20 Q 25 0 50 20 T 100 20 T 150 20 T 200 20" stroke="currentColor" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="200" cy="20" r="5" fill="currentColor"/></svg>
-    <svg class="cobra" style="top: 42%; width: 170px; animation-duration: 15s; animation-delay: -5s;" viewBox="0 0 200 40"><path d="M0 20 Q 25 0 50 20 T 100 20 T 150 20 T 200 20" stroke="currentColor" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="200" cy="20" r="5" fill="currentColor"/></svg>
-    <svg class="cobra" style="top: 61%; width: 230px; animation-duration: 22s; animation-delay: -14s;" viewBox="0 0 200 40"><path d="M0 20 Q 25 0 50 20 T 100 20 T 150 20 T 200 20" stroke="currentColor" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="200" cy="20" r="5" fill="currentColor"/></svg>
-    <svg class="cobra" style="top: 80%; width: 190px; animation-duration: 18s; animation-delay: -8s;" viewBox="0 0 200 40"><path d="M0 20 Q 25 0 50 20 T 100 20 T 150 20 T 200 20" stroke="currentColor" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="200" cy="20" r="5" fill="currentColor"/></svg>
+    <div class="grid-tech"></div>
+    <svg width="0" height="0" style="position:absolute">
+      <defs>
+        <linearGradient id="cobraGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#ff6b5e" stop-opacity="0"/>
+          <stop offset="75%" stop-color="#ff6b5e" stop-opacity="0.85"/>
+          <stop offset="100%" stop-color="#ffcfc7" stop-opacity="1"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <div class="cobras-wrap">
+      {% for c in cobras %}
+      <svg class="cobra" style="top: {{ c.top }}%; width: {{ c.width }}px; animation-duration: {{ c.dur }}s; animation-delay: {{ c.delay }}s;" viewBox="0 0 220 40">
+        <path d="M0 20 Q 27.5 2 55 20 T 110 20 T 165 20 T 220 20" stroke="url(#cobraGrad)" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+        <circle cx="220" cy="20" r="4.5" class="cobra-head"/>
+      </svg>
+      {% endfor %}
+    </div>
   </div>
   {% if session.get('logado') %}
   <nav class="navbar navbar-expand-lg gustavo-nav sticky-top mb-4">
