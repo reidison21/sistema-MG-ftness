@@ -67,16 +67,11 @@
           {% if session.get('usuario_nome') %}
           <span class="text-secondary small d-none d-lg-inline">{{ session.get('usuario_nome') }}</span>
           {% endif %}
-          <div class="dropdown">
-            <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Tema
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><button type="button" class="dropdown-item" onclick="definirTema('dark')">Escuro</button></li>
-              <li><button type="button" class="dropdown-item" onclick="definirTema('light')">Claro</button></li>
-              <li><button type="button" class="dropdown-item" onclick="definirTema('red')">Vermelho</button></li>
-            </ul>
-          </div>
+          <select id="seletorTema" class="form-select form-select-sm" style="width: auto;" onchange="definirTema(this.value)" aria-label="Tema">
+            <option value="dark">Escuro</option>
+            <option value="light">Claro</option>
+            <option value="red">Vermelho</option>
+          </select>
           <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-light btn-sm">Sair</a>
         </div>
       </div>
@@ -109,6 +104,12 @@
       localStorage.setItem("mgfitness_tema", tema);
       document.documentElement.setAttribute("data-theme", tema);
       document.documentElement.setAttribute("data-bs-theme", tema === "light" ? "light" : "dark");
+      var seletor = document.getElementById("seletorTema");
+      if (seletor) seletor.value = tema;
+    }
+    var seletorTemaEl = document.getElementById("seletorTema");
+    if (seletorTemaEl) {
+      seletorTemaEl.value = localStorage.getItem("mgfitness_tema") || "dark";
     }
   </script>
 </body>
