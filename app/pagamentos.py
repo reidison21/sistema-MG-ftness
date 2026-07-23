@@ -13,6 +13,7 @@ pagamentos_bp = Blueprint("pagamentos", __name__, url_prefix="/pagamentos")
 @pagamentos_bp.route("/")
 def listar():
     mes = request.args.get("mes") or date.today().strftime("%Y-%m")
+    q = request.args.get("q", "").strip()
 
     alunos_ativos = Aluno.query.filter_by(ativo=True).all()
     for aluno in alunos_ativos:
@@ -21,14 +22,21 @@ def listar():
             db.session.add(Pagamento(aluno_id=aluno.id, mes_referencia=mes, status="pendente"))
     db.session.commit()
 
-    registros = (
+    todos_registros = (
         Pagamento.query.join(Aluno)
         .filter(Pagamento.mes_referencia == mes)
         .order_by(Aluno.nome)
         .all()
     )
-    total_mes = sum(r.valor or 0 for r in registros if r.status == "pago")
-    return render_template("pagamentos/listar.html", registros=registros, mes=mes, total_mes=total_mes)
+    total_mes = sum(r.valor or 0 for r in todos_registros if r.status == "pago")
+
+    registros = todos_registros
+    if q:
+        registros = [r for r in todos_registros if q.lower() in r.aluno.nome.lower()]
+
+    return render_template(
+        "pagamentos/listar.html", registros=registros, mes=mes, total_mes=total_mes, q=q
+    )
 
 
 @pagamentos_bp.route("/<int:id>/alternar", methods=["POST"])

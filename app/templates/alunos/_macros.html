@@ -43,13 +43,13 @@
     <h5 class="mb-2">{{ aluno.nome }}</h5>
 
     {% if info.status == "vencido" %}
-      <p class="stat-value mb-1" style="color:#d19797;">{{ -info.dias }}</p>
+      <p class="stat-value mb-1" style="color:var(--status-danger-text);">{{ -info.dias }}</p>
       <span class="badge bg-danger mb-3">dias em atraso</span>
     {% elif info.status == "vencendo" %}
       <p class="stat-value mb-1" style="color:var(--accent-hover);">{{ info.dias }}</p>
       <span class="badge bg-warning mb-3">dias para vencer</span>
     {% elif info.status == "em_dia" %}
-      <p class="stat-value mb-1" style="color:#8fc79c;">{{ info.dias }}</p>
+      <p class="stat-value mb-1" style="color:var(--status-success-text);">{{ info.dias }}</p>
       <span class="badge bg-success mb-3">dias para vencer</span>
     {% else %}
       <p class="stat-value mb-1 text-secondary">&mdash;</p>

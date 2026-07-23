@@ -130,9 +130,15 @@ def detalhe(id):
 def mensagens(id):
     aluno = Aluno.query.get_or_404(id)
     templates = MensagemTemplate.query.order_by(MensagemTemplate.titulo).all()
+    vencimento = status_vencimento(aluno)
+    vencimento_str = (
+        vencimento["data_vencimento"].strftime("%d/%m/%Y")
+        if vencimento["data_vencimento"]
+        else "não definido"
+    )
     links = []
     for t in templates:
-        texto = t.texto.replace("{nome}", aluno.nome)
+        texto = t.texto.replace("{nome}", aluno.nome).replace("{vencimento}", vencimento_str)
         link = f"https://wa.me/{aluno.telefone}?text={quote(texto)}"
         links.append({"titulo": t.titulo, "texto": texto, "link": link})
     return render_template("alunos/mensagens.html", aluno=aluno, links=links)
