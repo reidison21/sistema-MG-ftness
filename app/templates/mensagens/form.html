@@ -11,7 +11,10 @@
   <div class="mb-3">
     <label class="form-label">Texto da mensagem</label>
     <textarea name="texto" class="form-control" rows="5" placeholder="Ex: Olá {nome}, tudo bem? Sua mensalidade está pendente." required>{{ template.texto if template else '' }}</textarea>
-    <div class="form-text">Use <code>{{ '{nome}' }}</code> para o nome do aluno e <code>{{ '{vencimento}' }}</code> para a data de vencimento (ex: 15/08/2026).</div>
+    <div class="form-text">
+      Use <code>{{ '{nome}' }}</code> para o nome do aluno e <code>{{ '{vencimento}' }}</code>
+      (ou <code>{{ '{data}' }}</code>) para a data de vencimento — ex: 15/08/2026.
+    </div>
   </div>
   <button type="submit" class="btn btn-primary">Salvar</button>
   <a href="{{ url_for('mensagens.listar') }}" class="btn btn-link">Cancelar</a>

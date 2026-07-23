@@ -138,7 +138,12 @@ def mensagens(id):
     )
     links = []
     for t in templates:
-        texto = t.texto.replace("{nome}", aluno.nome).replace("{vencimento}", vencimento_str)
+        texto = (
+            t.texto.replace("{nome}", aluno.nome)
+            .replace("{vencimento}", vencimento_str)
+            .replace("{data}", vencimento_str)
+            .replace("{data_vencimento}", vencimento_str)
+        )
         link = f"https://wa.me/{aluno.telefone}?text={quote(texto)}"
         links.append({"titulo": t.titulo, "texto": texto, "link": link})
     return render_template("alunos/mensagens.html", aluno=aluno, links=links)

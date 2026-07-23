@@ -5,7 +5,7 @@
   <h2>Mensagens padrão</h2>
   <a href="{{ url_for('mensagens.novo') }}" class="btn btn-primary">Nova mensagem</a>
 </div>
-<p class="text-secondary">Use <code>{{ '{nome}' }}</code> para o nome do aluno e <code>{{ '{vencimento}' }}</code> para a data de vencimento — ambos são preenchidos automaticamente.</p>
+<p class="text-secondary">Use <code>{{ '{nome}' }}</code> para o nome do aluno e <code>{{ '{vencimento}' }}</code> ou <code>{{ '{data}' }}</code> para a data de vencimento — são preenchidos automaticamente.</p>
 
 <div class="row g-3">
   {% for t in templates %}
