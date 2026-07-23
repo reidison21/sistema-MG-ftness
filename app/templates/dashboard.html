@@ -2,7 +2,16 @@
 {% from "alunos/_macros.html" import cartao_vencimento %}
 {% block title %}Dashboard{% endblock %}
 {% block content %}
-<h2 class="mb-4">Dashboard <span class="text-secondary fs-6">— {{ mes_atual }}</span></h2>
+<h2 class="mb-3">Dashboard <span class="text-secondary fs-6">— {{ mes_atual }}</span></h2>
+
+<div class="mb-4 position-relative" style="max-width: 420px;">
+  <div class="input-group">
+    <span class="input-group-text"><i class="bi bi-search"></i></span>
+    <input type="text" id="buscaRapida" class="form-control" placeholder="Buscar aluno..." autocomplete="off">
+  </div>
+  <div id="buscaRapidaResultados" class="busca-resultados d-none"></div>
+</div>
+
 <div class="row g-3">
   <div class="col-6 col-lg-3">
     <div class="card stat-card shadow-sm">
@@ -60,4 +69,57 @@
 <a href="{{ url_for('alunos.vencidos') }}" class="d-inline-block mt-3">Ver todos os {{ alertas|length }}</a>
 {% endif %}
 {% endif %}
+
+<script>
+(function () {
+  var input = document.getElementById("buscaRapida");
+  var resultados = document.getElementById("buscaRapidaResultados");
+  var timer = null;
+
+  function badgeStatus(a) {
+    if (a.status === "vencido") return '<span class="badge bg-danger">Vencido</span>';
+    if (a.status === "vencendo") return '<span class="badge bg-warning">Vencendo</span>';
+    if (a.status === "em_dia") return '<span class="badge bg-success">Em dia</span>';
+    return '<span class="badge bg-secondary">Sem plano</span>';
+  }
+
+  function mostrar(itens) {
+    if (!itens.length) {
+      resultados.innerHTML = '<div class="busca-item busca-vazio">Nenhum aluno encontrado.</div>';
+    } else {
+      resultados.innerHTML = itens.map(function (a) {
+        var sub = a.plano ? ' <span class="text-secondary small">— ' + a.plano + "</span>" : "";
+        return (
+          '<a href="/alunos/' + a.id + '" class="busca-item">' +
+          "<span>" + a.nome + sub + "</span>" +
+          badgeStatus(a) +
+          "</a>"
+        );
+      }).join("");
+    }
+    resultados.classList.remove("d-none");
+  }
+
+  input.addEventListener("input", function () {
+    clearTimeout(timer);
+    var q = input.value.trim();
+    if (!q) {
+      resultados.classList.add("d-none");
+      resultados.innerHTML = "";
+      return;
+    }
+    timer = setTimeout(function () {
+      fetch("{{ url_for('alunos.buscar_json') }}?q=" + encodeURIComponent(q))
+        .then(function (r) { return r.json(); })
+        .then(mostrar);
+    }, 200);
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!resultados.contains(e.target) && e.target !== input) {
+      resultados.classList.add("d-none");
+    }
+  });
+})();
+</script>
 {% endblock %}

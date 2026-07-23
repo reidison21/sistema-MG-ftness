@@ -4,7 +4,7 @@ import re
 from datetime import datetime, timedelta
 from urllib.parse import quote
 
-from flask import Blueprint, Response, flash, redirect, render_template, request, url_for
+from flask import Blueprint, Response, flash, jsonify, redirect, render_template, request, url_for
 
 from .models import Aluno, MensagemTemplate, Pagamento, Plano, db
 from .utils import status_vencimento
@@ -147,6 +147,32 @@ def mensagens(id):
         link = f"https://wa.me/{aluno.telefone}?text={quote(texto)}"
         links.append({"titulo": t.titulo, "texto": texto, "link": link})
     return render_template("alunos/mensagens.html", aluno=aluno, links=links)
+
+
+@alunos_bp.route("/buscar.json")
+def buscar_json():
+    q = request.args.get("q", "").strip()
+    if not q:
+        return jsonify([])
+    alunos = (
+        Aluno.query.filter(Aluno.nome.ilike(f"%{q}%"))
+        .order_by(Aluno.nome)
+        .limit(8)
+        .all()
+    )
+    resultado = []
+    for aluno in alunos:
+        info = status_vencimento(aluno)
+        resultado.append(
+            {
+                "id": aluno.id,
+                "nome": aluno.nome,
+                "plano": aluno.plano.nome if aluno.plano else None,
+                "status": info["status"],
+                "ativo": aluno.ativo,
+            }
+        )
+    return jsonify(resultado)
 
 
 @alunos_bp.route("/exportar.csv")
